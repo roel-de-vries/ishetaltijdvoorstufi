@@ -1,2 +1,39 @@
-<h2>Is het al tijd voor stufi?</h2>
-<p>Ja!</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Is het al tijd voor stufi?</title>
+</head>
+<body>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+
+        .container {
+            text-align: center;
+        }
+    </style>
+
+    <div class="container">
+            <h1>Is het al tijd voor stufi?</h2>
+            <h2 id="isItToid">Geen idee, want je hebt JavaScript uit staan..</p>
+    </div>
+    
+    <script>
+        var day = new Date().getDate(),
+        isItToidElement = document.getElementById('isItToid');
+
+        if(day === 24) {
+            isItToidElement.innerHTML = 'Ja!';
+            isItToidElement.style.color = '#2ecc71';
+        }
+        else {
+            isItToidElement.innerHTML = 'Nee!';
+            isItToidElement.style.color = '#e74c3c';
+        }
+    </script>
+</body>
+</html>

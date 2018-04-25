@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-60118515-5"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-60118515-5');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -12,27 +21,104 @@
             font-family: sans-serif;
         }
 
-        .container {
+        .container, footer {
             text-align: center;
+        }
+
+        .container {
+            margin-top: 25vh;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        a {
+            text-decoration: none;
         }
     </style>
 
     <div class="container">
-            <h1>Is het al tijd voor stufi?</h2>
-            <h2 id="isItToid">Geen idee, want je hebt JavaScript uit staan..</p>
+            <h2>Is het al tijd voor stufi?</h2>
+            <h1 id="isItToid">Geen idee..</h1>
+            <p id="moreInfo"> Want je hebt JavaScript uit staan..</p>
     </div>
+
+    <footer>
+        <p>Made with ❤️ by <a href="https://roeldevries.me">Roel de Vries</a></p>
+    </footer>
     
     <script>
-        var day = new Date().getDate(),
-        isItToidElement = document.getElementById('isItToid');
+        // A stufi-transaction will be made on the 24th, unless that date falls in the weekend which in that case the transaction will be made on the Friday before.
+        // 24 December is also skipped: if it falls on Monday or the weekend the transaction will be made on the Friday before. Otherwise the day before the 24th.
 
-        if(day === 24) {
+        var date = new Date(),
+        daysTillStufi = 0,
+        isItToidElement = document.getElementById('isItToid'),
+        moreInfoElement = document.getElementById('moreInfo'),
+        stufiDate = GetStufiDate();
+
+        // Check if it's already stufi time
+        if(date.getDate() === stufiDate.getDate()) {
             isItToidElement.innerHTML = 'Ja!';
             isItToidElement.style.color = '#2ecc71';
+            moreInfoElement.innerHTML = 'Dank u ome Duo!'
         }
         else {
+            // Check if we've surpassed this months stufi date
+            if(date.getDate() > stufiDate.getDate()) {
+                stufiDate = GetStufiDate(true);
+            }
+
+            daysTillStufi = CalculateDaysDifference(date, stufiDate);
+
             isItToidElement.innerHTML = 'Nee!';
             isItToidElement.style.color = '#e74c3c';
+            var daysOrDay = daysTillStufi === 1 ? ' dag' : ' dagen';
+            moreInfoElement.innerHTML = 'Nog ' + daysTillStufi + daysOrDay + ' te gaan, hou vol!';
+        }
+
+        function GetStufiDate(calculateNextMonth = false) {
+            var countDownDay = 24,
+                dateHelper = new Date(date.getFullYear(), date.getMonth(), countDownDay);
+
+            // Check if the next month needs to be calculated
+            if(calculateNextMonth) {
+                dateHelper.setMonth(dateHelper.getMonth() + 1);
+            }
+
+            var dayOfWeek = dateHelper.getDay(),
+            month = dateHelper.getMonth();
+
+            // Check if 24th falls:
+            // on a Sunday
+            if(dayOfWeek === 0) {
+                countDownDay = 22;
+            }
+            // on a Saturday
+            else if(dayOfWeek === 6) {
+                countDownDay = 23
+            }
+            // in December
+            else if(month === 11) {
+                // on a Monday
+                if(dayOfWeek === 1) {
+                    countDownDay = 21;
+                }
+                else {
+                    countDownDay = 23;
+                }
+            }
+
+            return new Date(dateHelper.getFullYear(), dateHelper.getMonth(), countDownDay);
+        }
+
+        function CalculateDaysDifference(dateOne, dateTwo) {
+            var oneDay = 24*60*60*1000;
+            return Math.round(Math.abs(dateOne.getTime() - dateTwo.getTime()) / (oneDay));
         }
     </script>
 </body>

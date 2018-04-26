@@ -86,7 +86,7 @@
                 dateHelper = new Date(date.getFullYear(), date.getMonth(), countDownDay);
 
             // Check if a date with a month offset needs to be calculated
-            if(calculateNextMonth) {
+            if(monthOffset) {
                 dateHelper.setMonth(dateHelper.getMonth() + 1);
             }
 

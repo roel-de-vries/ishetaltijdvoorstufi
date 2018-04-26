@@ -70,7 +70,7 @@
         else {
             // Check if we've surpassed this months stufi date
             if(date.getDate() > stufiDate.getDate()) {
-                stufiDate = GetStufiDate(true);
+                stufiDate = GetStufiDate(1);
             }
 
             daysTillStufi = CalculateDaysDifference(date, stufiDate);
@@ -78,14 +78,14 @@
             isItToidElement.innerHTML = 'Nee!';
             isItToidElement.style.color = '#e74c3c';
             var daysOrDay = daysTillStufi === 1 ? ' dag' : ' dagen';
-            moreInfoElement.innerHTML = 'Nog ' + daysTillStufi + daysOrDay + ' te gaan, hou vol!';
+            moreInfoElement.innerHTML = 'Nog ' + daysTillStufi + daysOrDay + ' te gaan tot de ' + stufiDate.getDate() + 'e, hou vol!';
         }
 
-        function GetStufiDate(calculateNextMonth = false) {
+        function GetStufiDate(monthOffset = 0) {
             var countDownDay = 24,
                 dateHelper = new Date(date.getFullYear(), date.getMonth(), countDownDay);
 
-            // Check if the next month needs to be calculated
+            // Check if a date with a month offset needs to be calculated
             if(calculateNextMonth) {
                 dateHelper.setMonth(dateHelper.getMonth() + 1);
             }

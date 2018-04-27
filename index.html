@@ -77,8 +77,18 @@
 
             isItToidElement.innerHTML = 'Nee!';
             isItToidElement.style.color = '#e74c3c';
-            var daysOrDay = daysTillStufi === 1 ? ' dag' : ' dagen';
-            moreInfoElement.innerHTML = 'Nog ' + daysTillStufi + daysOrDay + ' te gaan tot de ' + stufiDate.getDate() + 'e, hou vol!';
+
+            switch (daysTillStufi) {
+                case 0:
+                    moreInfoElement.innerHTML = 'Nog een paar uur te gaan tot de ' + stufiDate.getDate() + 'e , hou vol!';
+                    break;
+                case 1:
+                    moreInfoElement.innerHTML = 'Nog één dag te gaan tot de ' + stufiDate.getDate() + 'e, hou vol!';
+                    break;
+                default:
+                    moreInfoElement.innerHTML = 'Nog ' + daysTillStufi + ' dagen te gaan tot de ' + stufiDate.getDate() + 'e, hou vol!';
+                    break;
+            }
         }
 
         function GetStufiDate(monthOffset = 0) {

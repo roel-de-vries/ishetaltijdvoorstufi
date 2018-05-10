@@ -2,4 +2,4 @@
     Content-Security-Policy: frame-ancestors 'none'
     X-Frame-Options: DENY
     X-Content-Type-Options: nosniff
-    Content-Security-Policy: default-src 'none'; object-src 'none'; img-src https://www.google-analytics.com www.google-analytics.com https://stats.g.doubleclick.net; script-src 'self' https://www.google-analytics.com; style-src 'self'; font-src 'self'; connect-src https://www.google-analytics.com www.google-analytics.com https://stats.g.doubleclick.net; report-uri https://roeldevries.report-uri.io/r/default/csp/enforce;
+    Content-Security-Policy: default-src 'none'; object-src 'none'; script-src 'self' https://www.googletagmanager.com; style-src 'self'; font-src 'self'; report-uri https://roeldevries.report-uri.io/r/default/csp/enforce;

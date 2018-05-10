@@ -1,0 +1,22 @@
+body {
+    font-family: sans-serif;
+}
+
+.container, footer {
+    text-align: center;
+}
+
+.container {
+    margin-top: 25vh;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+a {
+    text-decoration: none;
+}

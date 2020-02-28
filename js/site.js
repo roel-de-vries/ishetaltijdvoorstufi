@@ -1,14 +1,5 @@
 // Retrieves the payment dates from duo.nl and caches the result. Repeat if the dates from the cache are in the past.
-
 const duoPage = 'https://duo.nl/particulier/footer-engels/service/payment-dates.jsp';
-
-$.ajax({
-    crossOrigin: true,
-    url: duoPage,
-    success: function(data) {
-        console.log(data);
-    }
-});
 
 var dateToday = moment().startOf('day'),
 daysTillStufi = 0,
@@ -24,64 +15,26 @@ function StartApp() {
     }
     
     // Check if it's already stufi time
-    if(dateToday.getDate() === stufiDate.getDate()) {
+    if(dateToday.isSame(paymentDates[0])) {
         isItTimeElement.innerHTML = 'Ja!';
         isItTimeElement.style.color = '#2ecc71';
         moreInfoElement.innerHTML = 'Dank u ome Duo!'
     }
     else {
-        daysTillStufi = CalculateDaysDifference(dateToday, stufiDate);
+        daysTillStufi = paymentDates[0].diff(dateToday, 'days');
 
         isItTimeElement.innerHTML = 'Nee!';
         isItTimeElement.style.color = '#e74c3c';
 
         switch (daysTillStufi) {
-            case 0:
-                moreInfoElement.innerHTML = 'Nog een paar uur te gaan tot de ' + stufiDate.getDate() + 'e , hou vol!';
-                break;
             case 1:
-                moreInfoElement.innerHTML = 'Nog één dag te gaan tot de ' + stufiDate.getDate() + 'e, hou vol!';
+                moreInfoElement.innerHTML = 'Nog één dag te gaan tot de ' + paymentDates[0].date() + 'e, hou vol!';
                 break;
             default:
-                moreInfoElement.innerHTML = 'Nog ' + daysTillStufi + ' dagen te gaan tot de ' + stufiDate.getDate() + 'e, hou vol!';
+                moreInfoElement.innerHTML = 'Nog ' + daysTillStufi + ' dagen te gaan tot de ' + paymentDates[0].date() + 'e, hou vol!';
                 break;
         }
     }
-}
-
-function GetStufiDate() {
-    var countDownDay = 24,
-        dateHelper = new Date(dateToday.getFullYear(), dateToday.getMonth(), countDownDay);
-
-    // Check if a date with a month offset needs to be calculated
-    if(monthOffset) {
-        dateHelper.setMonth(dateHelper.getMonth() + 1);
-    }
-
-    var dayOfWeek = dateHelper.getDay(),
-    month = dateHelper.getMonth();
-
-    // Check if 24th falls:
-    // on a Sunday
-    if(dayOfWeek === 0) {
-        countDownDay = 22;
-    }
-    // on a Saturday
-    else if(dayOfWeek === 6) {
-        countDownDay = 23
-    }
-    // in December
-    else if(month === 11) {
-        // on a Monday
-        if(dayOfWeek === 1) {
-            countDownDay = 21;
-        }
-        else {
-            countDownDay = 23;
-        }
-    }
-
-    return new Date(dateHelper.getFullYear(), dateHelper.getMonth(), countDownDay);
 }
 
 function UpdateLocalStorage() {
@@ -119,9 +72,9 @@ function ParseLocalStorageToDates() {
     let datesJson = JSON.parse(localStorage.getItem('ihatvs')),
     dateObjects = [];
 
-    datesJson.each(function(index, date) {
-        dateObjects.push(moment(date, 'DD-MM-YYYY'));
-    })
+    datesJson.forEach(function(date) {
+        dateObjects.push(moment(date));
+    });
 
     return dateObjects;
 }
@@ -150,18 +103,12 @@ function PopulateDates() {
 // Duo provides a list with string dates, this method converts those to date objects.
 function CreatePaymentDates($paymentDateStrings){
     let convertedDates = [],
-    currentYear = dateToday.getFullYear;
+    currentYear = dateToday.year();
 
     $paymentDateStrings.each(function (index, date) {
-        let paymentDate = moment(date + " " + currentYear, "DD MMMM YYYY");
+        let paymentDate = moment(date.innerText + " " + currentYear, "DD MMMM YYYY");
         convertedDates.push(paymentDate);
     });
 
     return convertedDates;
 }
-
-function CalculateDaysDifference(dateOne, dateTwo) {
-    var oneDay = 24*60*60*1000;
-    return Math.round(Math.abs(dateOne.getTime() - dateTwo.getTime()) / (oneDay));
-}
-

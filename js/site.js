@@ -46,13 +46,13 @@ var app = function(passedConfig) {
         
         let cachedDates = ParseLocalStorageToDates();
     
-        // Chech if the cached dates are in the past.
+        // Check if all the cached dates are in the past.
         if(moment(cachedDates[cachedDates.length - 1]).isBefore(dateToday)){
             PopulateDates();
             cachedDates = ParseLocalStorageToDates();
         }
     
-        // Remove all dates in the past since duo doesn't do this after each date has passed.
+        // Remove all dates in the past since duo doesn't do this after a date has passed.
         for(let i = 0; i < cachedDates.length; i++) {
             if(moment(cachedDates[i]).isBefore(dateToday)){
                 cachedDates.shift();
@@ -64,6 +64,7 @@ var app = function(passedConfig) {
         }
     
         paymentDates = cachedDates;
+        localStorage.setItem('ihatvs', JSON.stringify(cachedDates));
     
         return true;
     }
@@ -87,13 +88,11 @@ var app = function(passedConfig) {
             crossOrigin: true,
             url: config.duoEndpoint,
             success: function(data) {
-                let $duoHtml = $(data),
-                payYearSelector = '#payment-dates-' + dateToday.year(),
-                $paymentDateList = $duoHtml.find(payYearSelector).siblings('ul').find('li');
+                let $duoHtml = $(data);
+                
     
                 // Get the payment dates
-                let dateObjects = CreatePaymentDates($paymentDateList);
-    
+                let dateObjects = CreatePaymentDates($duoHtml);
                 localStorage.setItem('ihatvs', JSON.stringify(dateObjects));
     
                 Start();
@@ -102,13 +101,20 @@ var app = function(passedConfig) {
     }
     
     // Duo provides a list with string dates, this method converts those to date objects.
-    function CreatePaymentDates($paymentDateStrings){
+    function CreatePaymentDates($duoHtml){
         let convertedDates = [],
-        currentYear = dateToday.year();
+            currentYear = dateToday.year(),
+            payYearSelector = '#payment-dates-' + dateToday.year(),
+            $paymentDateStrings = $duoHtml.find(payYearSelector).siblings('ul').find('li');
+        
     
         $paymentDateStrings.each(function (index, date) {
             let paymentDate = moment(date.innerText + " " + currentYear, "DD MMMM YYYY");
             convertedDates.push(paymentDate);
+
+            if(paymentDate.month() === 11) {
+                currentYear++;
+            }
         });
     
         return convertedDates;

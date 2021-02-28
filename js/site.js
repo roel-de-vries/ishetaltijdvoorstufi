@@ -1,7 +1,8 @@
 let config = {
-    duoEndpoint: 'https://duo.nl/particulier/footer-engels/service/payment-dates.jsp',
+    duoEndpoint: 'https://duo.nl/particulier/payment-dates/index.jsp',
     timeElement: document.getElementById('isItTime'),
-    infoElement: document.getElementById('moreInfo')
+    infoElement: document.getElementById('moreInfo'),
+    localStorageKey: 'ihatvs_v2'
 }
 
 // Retrieves the payment dates from duo.nl and caches the result. Repeat if the dates from the cache are in the past.
@@ -39,7 +40,7 @@ var app = function(passedConfig) {
     }
     
     function UpdateLocalStorage() {
-        if (localStorage.getItem('ihatvs') === null) {
+        if (localStorage.getItem(config.localStorageKey) === null) {
             PopulateDates();
             return false;
         }
@@ -64,14 +65,14 @@ var app = function(passedConfig) {
         }
     
         paymentDates = cachedDates;
-        localStorage.setItem('ihatvs', JSON.stringify(cachedDates));
+        localStorage.setItem(config.localStorageKey, JSON.stringify(cachedDates));
     
         return true;
     }
     
     // Gets json dates from the local storage and parses them back to objects.
     function ParseLocalStorageToDates() {
-        let datesJson = JSON.parse(localStorage.getItem('ihatvs')),
+        let datesJson = JSON.parse(localStorage.getItem(config.localStorageKey)),
         dateObjects = [];
     
         datesJson.forEach(function(date) {
@@ -93,7 +94,7 @@ var app = function(passedConfig) {
     
                 // Get the payment dates
                 let dateObjects = CreatePaymentDates($duoHtml);
-                localStorage.setItem('ihatvs', JSON.stringify(dateObjects));
+                localStorage.setItem(config.localStorageKey, JSON.stringify(dateObjects));
     
                 Start();
             }
@@ -105,7 +106,7 @@ var app = function(passedConfig) {
         let convertedDates = [],
             currentYear = dateToday.year(),
             payYearSelector = '#payment-dates-' + dateToday.year(),
-            $paymentDateStrings = $duoHtml.find(payYearSelector).siblings('ul').find('li');
+            $paymentDateStrings = $duoHtml.find(payYearSelector).next('ul').find('li');
         
     
         $paymentDateStrings.each(function (index, date) {

@@ -2,7 +2,7 @@ let config = {
     duoEndpoint: 'https://duo.nl/particulier/payment-dates.jsp',
     timeElement: document.getElementById('isItTime'),
     infoElement: document.getElementById('moreInfo'),
-    localStorageKey: 'ihatvs_v3'
+    localStorageKey: 'ihatvs_v4'
 }
 
 // Retrieves the payment dates from duo.nl and caches the result. Repeat if the dates from the cache are in the past.
@@ -93,7 +93,7 @@ var app = function(passedConfig) {
                 
     
                 // Get the payment dates
-                let dateObjects = CreatePaymentDates($duoHtml);
+                let dateObjects = CreatePaymentDates($duoHtml, dateToday.year());
                 localStorage.setItem(config.localStorageKey, JSON.stringify(dateObjects));
     
                 Start();
@@ -102,19 +102,17 @@ var app = function(passedConfig) {
     }
     
     // Duo provides a list with string dates, this method converts those to date objects.
-    function CreatePaymentDates($duoHtml){
+    function CreatePaymentDates($duoHtml, year){
         let convertedDates = [],
-            currentYear = dateToday.year(),
-            payYearSelector = '#payment-dates-' + dateToday.year(),
+            payYearSelector = '#payment-dates-' + year,
             $paymentDateStrings = $duoHtml.find(payYearSelector).parent().next('div').find('ul').find('li')
         
-    
         $paymentDateStrings.each(function (index, date) {
-            let paymentDate = moment(date.innerText + " " + currentYear, "DD MMMM YYYY");
+            let paymentDate = moment(date.innerText + " " + year, "DD MMMM YYYY");
             convertedDates.push(paymentDate);
 
             if(paymentDate.month() === 11) {
-                currentYear++;
+                convertedDates = convertedDates.concat(CreatePaymentDates($duoHtml, year + 1));
             }
         });
     

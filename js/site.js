@@ -1,8 +1,8 @@
 let config = {
-    duoEndpoint: 'https://duo.nl/particulier/payment-dates/index.jsp',
+    duoEndpoint: 'https://duo.nl/particulier/payment-dates.jsp',
     timeElement: document.getElementById('isItTime'),
     infoElement: document.getElementById('moreInfo'),
-    localStorageKey: 'ihatvs_v2'
+    localStorageKey: 'ihatvs_v3'
 }
 
 // Retrieves the payment dates from duo.nl and caches the result. Repeat if the dates from the cache are in the past.
@@ -106,7 +106,7 @@ var app = function(passedConfig) {
         let convertedDates = [],
             currentYear = dateToday.year(),
             payYearSelector = '#payment-dates-' + dateToday.year(),
-            $paymentDateStrings = $duoHtml.find(payYearSelector).next('ul').find('li');
+            $paymentDateStrings = $duoHtml.find(payYearSelector).parent().next('div').find('ul').find('li')
         
     
         $paymentDateStrings.each(function (index, date) {

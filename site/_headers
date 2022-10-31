@@ -1,4 +1,4 @@
 /*
-    Content-Security-Policy: frame-ancestors 'none'; default-src 'none'; object-src 'none'; script-src 'self' https://cdnjs.cloudflare.com https://script.google.com; style-src 'self' https://*.cloudfront.net; img-src 'self' https://*.cloudfront.net; connect-src 'self'; font-src 'self'; report-uri https://roeldevries.report-uri.io/r/default/csp/enforce;
+    Content-Security-Policy: frame-ancestors 'none'; default-src 'none'; object-src 'none'; script-src 'self' https://*.cloudfront.net https://cdnjs.cloudflare.com https://script.google.com; style-src 'self' https://*.cloudfront.net; img-src 'self' https://*.cloudfront.net; connect-src 'self' https://duo.nl; font-src 'self'; report-uri https://roeldevries.report-uri.io/r/default/csp/enforce;
     X-Frame-Options: DENY
     X-Content-Type-Options: nosniff

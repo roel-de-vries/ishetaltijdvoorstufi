@@ -24,7 +24,7 @@ var app = function(passedConfig) {
         }
         else {
             const diffInMs = paymentDates[0] - dateToday
-            const daysTillStufi = diffInMs / (1000 * 60 * 60 * 24);
+            const daysTillStufi = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
 
             config.timeElement.innerHTML = 'Nee!';
             config.timeElement.style.color = '#e74c3c';

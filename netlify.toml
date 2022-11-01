@@ -1,0 +1,36 @@
+# Settings in the [build] context are global and are applied to
+# all contexts unless otherwise overridden by more specific contexts.
+[build]
+  publish = "site"
+
+[[headers]]
+  # Define which paths this specific [[headers]] block will cover.
+  for = "/*"
+
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Content-Security-Policy = "frame-ancestors 'none'; default-src 'none'; object-src 'none'; script-src 'self' https://*.cloudfront.net; style-src 'self' https://*.cloudfront.net; img-src 'self' https://*.cloudfront.net; connect-src 'self'; font-src 'self'; report-uri https://roeldevries.report-uri.io/r/default/csp/enforce;"
+
+[functions]
+  # Directory with serverless functions, including background
+  # functions, to deploy. This is relative to the base directory
+  # if one has been set, or the root directory if
+  # a base hasn’t been set.
+  directory = "functions"
+
+# Use [dev] to set configuration overrides for local 
+# development environments run using Netlify Dev - except 
+# for environment variables. Environment variables for Netlify 
+# Dev should be set under [context.dev.environment] instead.
+[dev]
+  [[headers]]
+  # Define which paths this specific [[headers]] block will cover.
+  for = "/*"
+
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Content-Security-Policy = "frame-ancestors 'none'; default-src 'none'; object-src 'none'; script-src 'self' https://*.cloudfront.net; style-src 'self' https://*.cloudfront.net; img-src 'self' https://*.cloudfront.net; connect-src 'self' http://localhost:8888; font-src 'self'; report-uri https://roeldevries.report-uri.io/r/default/csp/enforce;"

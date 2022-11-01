@@ -6,7 +6,12 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
     const duoHtml = await fetchPage("https://duo.nl/particulier/payment-dates.jsp")
 
     if(!duoHtml) {
-        return {statusCode: 500};
+        return {
+            statusCode: 500,
+            headers: {
+                "Access-Control-Allow-Origin": process.env.DEPLOY_URL
+            }
+        };
     }
 
     const currentYear = new Date().getFullYear();
@@ -15,7 +20,12 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
 
     if(!currentYearData){
         console.error(`Could not parse data for year ${currentYear}`);
-        return {statusCode: 500};
+        return {
+            statusCode: 500,
+            headers: {
+                "Access-Control-Allow-Origin": process.env.DEPLOY_URL
+            }
+        };
     }
 
     let response: Date[] = currentYearData;
@@ -29,8 +39,11 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
 
     return {
         statusCode: 200,
+        headers: {
+            "Access-Control-Allow-Origin": process.env.DEPLOY_URL
+        },
         body: JSON.stringify(response)
-      };
+    };
 };
 
 export { handler };
